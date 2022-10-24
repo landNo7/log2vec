@@ -3,6 +3,9 @@ import networkx as nx
 from tqdm import tqdm
 
 
+# def rule_node(sequences):
+
+
 def rule_1(daily_sequences_list):
     print ("Function 'rule_1()' starts!")
     # Associate nodes according to Rule 1
@@ -34,7 +37,7 @@ def rule_23(daily_sequences_list, day_delta):
             H_record_tuple = {}
             node_list = list(daily_sequence.nodes())
             for node_i in node_list:
-                current_H = daily_sequence.nodes[node_i]['H']
+                current_H = daily_sequence.nodes[node_i]['assetip']
                 if current_H not in H_record_tuple.keys():
                     H_record_tuple[current_H] = [node_i]
                 else:
@@ -50,7 +53,7 @@ def rule_23(daily_sequences_list, day_delta):
                 H_list = H_record_tuple[key]
                 A_record_tuple = {}
                 for node_i in H_list:
-                    current_A = daily_sequence.nodes[node_i]['A']
+                    current_A = daily_sequence.nodes[node_i]['label']
                     if current_A not in A_record_tuple.keys():
                         A_record_tuple[current_A] = [node_i]
                     else:

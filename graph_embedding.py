@@ -16,7 +16,7 @@ import time
 
 
 def evaluate_embeddings(embeddings, dirpath, filename):
-    X, Y = get_label(dirpath, filename)
+    X, Y = get_label(dirpath, filename, "anomaly_list.txt")
     tr_frac = 0.8
     print("Training classifier using {:.2f}% nodes...".format(
         tr_frac * 100))
@@ -25,7 +25,7 @@ def evaluate_embeddings(embeddings, dirpath, filename):
 
 
 def plot_embeddings(embeddings, dirpath, filename):
-    X, Y = get_label(dirpath, filename)
+    X, Y = get_label(dirpath, filename, "anomaly_list.txt")
 
     emb_list = []
     for k in X:
@@ -74,7 +74,7 @@ def get_tpfp(y_pred, y_test):
     fn = r[1] - fp
     return tp, fp, tn, fn
 
-csvname = "crop_data1"
+csvname = "attack"
 gpickle_name = "./data/{csvname}_graph.gpickle".format(csvname=csvname)
 print("...read {gpickle_name} graph start...".format(gpickle_name=gpickle_name))
 rg_st_time = time.time()
