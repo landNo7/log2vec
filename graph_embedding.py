@@ -15,13 +15,14 @@ from tqdm import tqdm
 import time
 
 
-def evaluate_embeddings(embeddings, dirpath, filename):
+def evaluate_embeddings(clf, dirpath, filename):
     X, Y = get_label(dirpath, filename, "anomaly_list.txt")
     tr_frac = 0.8
     print("Training classifier using {:.2f}% nodes...".format(
         tr_frac * 100))
-    clf = Classifier(embeddings=embeddings, clf=LogisticRegression())
-    return clf.split_train_evaluate(X, Y, tr_frac)
+    results = clf.split_train_evaluate(X, Y, tr_frac)
+    print(clf.predict_proba(["10.146.236.10"]))
+    return results
 
 
 def plot_embeddings(embeddings, dirpath, filename):
@@ -120,12 +121,14 @@ print("...DBSCAN fit completed, time cost:", time.time() - fit_st_time)
 
 print("...evaluate_embeddings start...")
 ee_time = time.time()
-results = evaluate_embeddings(embeddings, "./data", csvname + ".csv")
+clf = Classifier(embeddings=embeddings, clf=LogisticRegression())
+results = evaluate_embeddings(clf, "./data", csvname + ".csv")
 print("...evaluate_embeddings completed time cost:", time.time() - ee_time)
 
 print("...code run cost:", time.time() - rg_st_time)
 
-tp, fp, tn, fn = get_tpfp(results['y_pred'], results['y_test_'])
-print("tp=%d, fp=%d, tn=%d, fn=%d" % (tp, fp, tn, fn))
-plot_auc(results['y_test_'], results['pred'])
+print(clf.predict_proba(["10.146.236.10"]))
+# tp, fp, tn, fn = get_tpfp(results['y_pred'], results['y_test_'])
+# print("tp=%d, fp=%d, tn=%d, fn=%d" % (tp, fp, tn, fn))
+# plot_auc(results['y_test_'], results['pred'])
 # plot_embeddings(embeddings, "./data", csvname + ".csv")

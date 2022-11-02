@@ -141,3 +141,7 @@ def rule_456(daily_sequences_list, H_tuple_list, A_tuple_list, day_delta):
                                 graph.add_edge(u2, v2, EdgeType=6, weight=w)
 
     return graph
+
+
+def rule_7(daily_sequences_list):
+    pass
