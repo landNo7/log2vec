@@ -35,6 +35,26 @@ def get_label(dir_path, filename, labelfile):
 	return X, Y
 
 
+def get_all_attackip(dir_path, filename):
+	attackip_list = list()
+	with open(os.path.join(dir_path, filename), 'r', encoding='unicode_escape') as file:
+		read = csv.reader(file)
+		next(read)
+		num = 0
+		for i in tqdm(read):
+			if num == 0:
+				last_read = i
+			else:
+				for j,item in enumerate(i):
+					if item == '':
+						i[j] = last_read[j]
+			if i[0] not in attackip_list:
+ 				attackip_list.append(i[0])
+			num += 1
+			last_read = i
+
+	return attackip_list
+
 def crop_data(dir_path, newfilename, newfilename1):
 	logs2 = []
 	with open(os.path.join(dir_path, "device.csv"), 'r') as file:

@@ -32,24 +32,24 @@ def get_node_from_data(dir_path, csvname):
             vertex_id = i[0]
             start_time = time.mktime(time.strptime(i[8],'%Y/%m/%d %H:%M'))
             end_time = time.mktime(time.strptime(i[9],'%Y/%m/%d %H:%M'))
-            # vertex = { 'vertex_type': 'attack',
-            #             'eventip': vertex_id,
-            #             'assetip': i[2],
-            #             'country': i[1],
-            #             'label': i[3],
-            #             'attack_nums': i[4],
-            #             'level': i[5],
-            #             'effect': i[6],
-            #             'disposition': i[7],
-            #             'start_time': start_time,
-            #             'end_time': end_time
-            #             }
             vertex = { 'vertex_type': 'attack',
                         'eventip': vertex_id,
                         'assetip': i[2],
+                        'country': i[1],
                         'label': i[3],
-                        'start_time': start_time
+                        'attack_nums': i[4],
+                        'level': i[5],
+                        'effect': i[6],
+                        'disposition': i[7],
+                        'start_time': start_time,
+                        'end_time': end_time
                         }
+            # vertex = { 'vertex_type': 'attack',
+            #             'eventip': vertex_id,
+            #             'assetip': i[2],
+            #             'label': i[3],
+            #             'start_time': start_time
+            #             }
             vertex_list.append(vertex)
             if num < 1000 and vertex_id not in anomaly_list:
                 anomaly_list.append(vertex_id)
@@ -97,14 +97,14 @@ def split_node_by_day(sorted_vertex_list, day_delta):
         if not daily_sequences_list[day_of_vertex]:
             # multiGraph 无向图 可以让两个节点之间有多个边，为啥要用这个graph..
             daily_sequences_list[day_of_vertex] = nx.MultiGraph()
-        # daily_sequences_list[day_of_vertex].add_node(vertex['eventip'], type=vertex['vertex_type'],
-        #                                                     assetip=vertex['assetip'], country=vertex['country'], label=vertex['label'],
-        #                                                     level=vertex['level'], effect=vertex['effect'], disposition=vertex['disposition'],
-        #                                                     start_time=vertex['start_time'], end_time=vertex['end_time'])
-        
         daily_sequences_list[day_of_vertex].add_node(vertex['eventip'], type=vertex['vertex_type'],
-                                                            assetip=vertex['assetip'], label=vertex['label'],
-                                                            start_time=vertex['start_time'])
+                                                            assetip=vertex['assetip'], country=vertex['country'], label=vertex['label'], attack_nums=vertex['attack_nums'],
+                                                            level=vertex['level'], effect=vertex['effect'], disposition=vertex['disposition'],
+                                                            start_time=vertex['start_time'], end_time=vertex['end_time'])
+        
+        # daily_sequences_list[day_of_vertex].add_node(vertex['eventip'], type=vertex['vertex_type'],
+        #                                                     assetip=vertex['assetip'], label=vertex['label'],
+        #                                                     start_time=vertex['start_time'])
     return daily_sequences_list
 
 

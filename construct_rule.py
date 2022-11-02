@@ -4,7 +4,11 @@ from tqdm import tqdm
 
 
 # def rule_node(sequences):
+def sigmoid(x):
+    return 1.0 / (1 + np.exp(-x))
 
+def get_weight(x, y):
+    return sigmoid(x) * y
 
 def rule_1(daily_sequences_list):
     print ("Function 'rule_1()' starts!")
@@ -42,8 +46,12 @@ def rule_23(daily_sequences_list, day_delta):
                     H_record_tuple[current_H] = [node_i]
                 else:
                     # 同host按照时间顺序的上一个节点和当前节点的连接
+                    x = int(daily_sequence.nodes[node_i]['attack_nums'])
+                    y = int(daily_sequence.nodes[node_i]['level'])
+                    x = x if daily_sequence.nodes[node_i]['country'] == 'CN' else x * 2
+                    weight = get_weight(x, y)
                     node_j = H_record_tuple[current_H][-1]
-                    daily_sequence.add_edge(node_j, node_i, EdgeType=2, weight=1)
+                    daily_sequence.add_edge(node_j, node_i, EdgeType=2, weight=weight)
                     H_record_tuple[current_H].append(node_i)
 
             A_record_tuple_tuple = {}
@@ -58,8 +66,12 @@ def rule_23(daily_sequences_list, day_delta):
                         A_record_tuple[current_A] = [node_i]
                     else:
                         # 同一种host下按照时间顺序，同一种操作type连接
+                        x = int(daily_sequence.nodes[node_i]['attack_nums'])
+                        y = int(daily_sequence.nodes[node_i]['level'])
+                        x = x if daily_sequence.nodes[node_i]['country'] == 'CN' else x * 2
+                        weight = get_weight(x, y)
                         node_j = A_record_tuple[current_A][-1]
-                        daily_sequence.add_edge(node_j, node_i, EdgeType=3, weight=1)
+                        daily_sequence.add_edge(node_j, node_i, EdgeType=3, weight=weight)
                         A_record_tuple[current_A].append(node_i)
 
                 A_record_tuple_tuple[key]=A_record_tuple

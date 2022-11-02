@@ -1,4 +1,4 @@
-
+import pandas as pd
 import numpy as np
 
 from graph_emb.classify import read_node_label, Classifier
@@ -75,6 +75,14 @@ def get_tpfp(y_pred, y_test):
     fn = r[1] - fp
     return tp, fp, tn, fn
 
+def predict(X, islist=1):
+    pred = clf.predict_proba(X)
+    pred = np.array(pred).flatten()
+    pred = pred.reshape(-1, 2)
+    X = np.array(X)
+    X = X.reshape(-1, 1)
+    return np.concatenate([X, pred], axis=1)
+
 csvname = "attack"
 gpickle_name = "./data/{csvname}_graph.gpickle".format(csvname=csvname)
 print("...read {gpickle_name} graph start...".format(gpickle_name=gpickle_name))
@@ -127,8 +135,11 @@ print("...evaluate_embeddings completed time cost:", time.time() - ee_time)
 
 print("...code run cost:", time.time() - rg_st_time)
 
-print(clf.predict_proba(["10.146.236.10"]))
+pd.DataFrame(predict(get_all_attackip("./data", csvname + ".csv"))).to_csv('./data/results.csv')
+# print(clf.predict_proba(["10.146.236.10"]))
 # tp, fp, tn, fn = get_tpfp(results['y_pred'], results['y_test_'])
 # print("tp=%d, fp=%d, tn=%d, fn=%d" % (tp, fp, tn, fn))
 # plot_auc(results['y_test_'], results['pred'])
 # plot_embeddings(embeddings, "./data", csvname + ".csv")
+
+
